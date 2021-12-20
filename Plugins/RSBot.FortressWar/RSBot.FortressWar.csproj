@@ -7,8 +7,8 @@
         <ProjectGuid>{76F8F23B-BFFE-4E40-87B7-920C39AD9098}</ProjectGuid>
         <OutputType>Library</OutputType>
         <AppDesignerFolder>Properties</AppDesignerFolder>
-        <RootNamespace>RSBot.FortressWar</RootNamespace>
-        <AssemblyName>RSBot.FortressWar</AssemblyName>
+        <RootNamespace>FortressWar</RootNamespace>
+        <AssemblyName>FortressWar</AssemblyName>
         <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
         <FileAlignment>512</FileAlignment>
     </PropertyGroup>
@@ -17,7 +17,7 @@
         <DebugSymbols>true</DebugSymbols>
         <DebugType>full</DebugType>
         <Optimize>false</Optimize>
-        <OutputPath>bin\Debug\</OutputPath>
+        <OutputPath>..\..\Build\Plugins\</OutputPath>
         <DefineConstants>DEBUG;TRACE</DefineConstants>
         <ErrorReport>prompt</ErrorReport>
         <WarningLevel>4</WarningLevel>
@@ -26,7 +26,7 @@
         <PlatformTarget>AnyCPU</PlatformTarget>
         <DebugType>pdbonly</DebugType>
         <Optimize>true</Optimize>
-        <OutputPath>bin\Release\</OutputPath>
+        <OutputPath>..\..\Build\Release\Plugins\</OutputPath>
         <DefineConstants>TRACE</DefineConstants>
         <ErrorReport>prompt</ErrorReport>
         <WarningLevel>4</WarningLevel>
@@ -41,6 +41,12 @@
     </ItemGroup>
     <ItemGroup>
         <Compile Include="Bootstrap.cs" />
+        <Compile Include="Bundle\CommandCore\CommandContainer.cs" />
+        <Compile Include="Bundle\CommandCore\CommandHandler.cs" />
+        <Compile Include="Bundle\CommandCore\CommandParser.cs" />
+        <Compile Include="Bundle\Commands\ICommand.cs" />
+        <Compile Include="Bundle\Commands\TraceCommand.cs" />
+        <Compile Include="Bundle\Network\ChatCommand.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
         <Compile Include="Views\Main.cs">
           <SubType>UserControl</SubType>
@@ -58,6 +64,14 @@
       <ProjectReference Include="..\..\Library\RSBot.Core\RSBot.Core.csproj">
         <Project>{84323c14-eb9f-44d9-8980-89c9f82db4ee}</Project>
         <Name>RSBot.Core</Name>
+      </ProjectReference>
+      <ProjectReference Include="..\..\Library\RSBot.Theme\RSBot.Theme.csproj">
+        <Project>{9e2a3ce3-d977-4e96-9f56-49288cf7d6b3}</Project>
+        <Name>RSBot.Theme</Name>
+      </ProjectReference>
+      <ProjectReference Include="..\RSBot.Chat\RSBot.Chat.csproj">
+        <Project>{10cb2a7e-46cc-4427-986c-d2ccee919dfb}</Project>
+        <Name>RSBot.Chat</Name>
       </ProjectReference>
     </ItemGroup>
     <ItemGroup>

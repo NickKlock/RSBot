@@ -1,4 +1,6 @@
-﻿namespace RSBot.FortressWar.Views
+﻿using FortressWar.Views;
+
+namespace RSBot.FortressWar.Views
 {
     public class View
     {

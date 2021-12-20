@@ -1106,5 +1106,20 @@ namespace RSBot.Core.Objects
             PacketManager.SendPacket(packet, PacketDestination.Server, callback);
             callback.AwaitResponse(500);
         }
+
+        public void StartTrace(uint uniqueId)
+        {
+            var actionPacket = new Packet(0x7074);
+            actionPacket.WriteByte(1);
+            actionPacket.WriteByte(3);
+            actionPacket.WriteByte(1);
+            actionPacket.WriteUInt(uniqueId);
+            //LocalPlayer.Get.Tracing = true;
+            actionPacket.Lock();
+
+            var callBack = new AwaitCallback(null, 0xB074);
+            PacketManager.SendPacket(actionPacket,PacketDestination.Server,callBack);
+            callBack.AwaitResponse(500);
+        }
     }
 }
