@@ -15,13 +15,14 @@ namespace FortressWar.Views
     public partial class Main : UserControl
     {
         public Dictionary<string, ICommand> Commands = new Dictionary<string, ICommand>();
+        
         public Main()
-        {
+        {            
+            InitializeComponent();
             InitializeCommands();
             CheckForIllegalCrossThreadCalls = false;
-            InitializeComponent();
             SubscribeEvents();
-            
+           
         }
 
         private void startTrace_Click(object sender, EventArgs e)
@@ -44,40 +45,21 @@ namespace FortressWar.Views
         {
             string row = playnameTextBox.Text;
             var listViewItem = new ListViewItem(row);
-
             tracePlayerList.Items.Add(listViewItem);
+            var list = tracePlayerList.Items.Cast<ListViewItem>().Select(item => item.Text).ToArray();
+            PlayerConfig.SetArray("RSBot.FortressWar.commandList",list);
         }
 
         private void SubscribeEvents()
         {
-            
+            EventManager.SubscribeEvent("OnEnterGame", OnEnterGame);
         }
 
-        public void ChatCommandTrace(uint senderId, string message)
+        private void OnEnterGame()
         {
-            Log.Notify("should trace");
-            var commandContainer = message.Split(' ');
-            var invoke = commandContainer[0].Trim();
-            var who = commandContainer[1].Trim();
-            if (invoke.Equals("cmd"))
+            foreach (var str in  PlayerConfig.GetArray<string>("RSBot.FortressWar.commandList"))
             {
-                Log.Notify("its a cmd");
-                SpawnManager.TryGetEntities<SpawnedPlayer>(out var spawnedPlayers);
-                foreach (var player in spawnedPlayers)
-                {
-                    Log.Notify("looking for players");
-                    if (player.Name.Equals(who))
-                    {
-                        Log.Notify("start tracing");
-                        Game.Player.StartTrace(player.UniqueId);
-                    }
-                    else
-                    {
-                        Log.Notify("nth found");
-
-                    }
-                    
-                }
+                tracePlayerList.Items.Add(str);
             }
         }
 

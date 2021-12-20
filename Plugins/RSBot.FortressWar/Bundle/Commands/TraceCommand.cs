@@ -10,22 +10,24 @@ namespace RSBot.FortressWar.Bundle.Commands
         public void Action(string arg, uint senderId)
         {
             SpawnManager.TryGetEntities<SpawnedPlayer>(out var spawnedPlayers);
-            Log.Notify(arg.Length);
-            switch (arg.Length)
+  
+            switch (arg.Length == 0)
             {
-                case 0:
+                case true:
+
                     foreach (var spawnedPlayer in spawnedPlayers)
                     {
-                        if (spawnedPlayer.UniqueId == senderId)
+                        if (spawnedPlayer.UniqueId.Equals(senderId))
                         {
                             doTrace(spawnedPlayer);
                         }
                     }
                     break;
-                default:
+                case false:
+                    
                     foreach (var spawnedPlayer in spawnedPlayers)
                     {
-                        if (spawnedPlayer.Name.Equals(arg))
+                        if (spawnedPlayer.Name.Equals(arg.Trim()))
                         {
                             doTrace(spawnedPlayer);
                         }
@@ -40,5 +42,6 @@ namespace RSBot.FortressWar.Bundle.Commands
         {
             Game.Player.StartTrace(player.UniqueId);
         }
+        
     }
 }

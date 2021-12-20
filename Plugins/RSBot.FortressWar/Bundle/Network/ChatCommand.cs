@@ -25,7 +25,6 @@ namespace RSBot.FortressWar.Bundle.Network
 
                 if (messageAll.StartsWith("cmd"))
                 {
-                    Log.Notify("Handling Command");
                     CommandHandler.HandleCommand(CommandParser.Parse(messageAll, senderId));
                 }
             }

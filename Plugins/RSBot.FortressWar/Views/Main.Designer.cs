@@ -33,10 +33,9 @@ namespace FortressWar.Views
         {
             this.panel1 = new System.Windows.Forms.Panel();
             this.playnameTextBox = new System.Windows.Forms.TextBox();
-            this.addToListBtn = new System.Windows.Forms.Button();
+            this.addToListBtn = new RSBot.Theme.Material.Button();
             this.tracePlayerList = new RSBot.Theme.Controls.ListView();
             this.columnName = new System.Windows.Forms.ColumnHeader();
-            this.startTrace = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -46,7 +45,6 @@ namespace FortressWar.Views
             this.panel1.Controls.Add(this.playnameTextBox);
             this.panel1.Controls.Add(this.addToListBtn);
             this.panel1.Controls.Add(this.tracePlayerList);
-            this.panel1.Controls.Add(this.startTrace);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
@@ -55,21 +53,27 @@ namespace FortressWar.Views
             // 
             // playnameTextBox
             // 
-            this.playnameTextBox.Location = new System.Drawing.Point(6, 216);
+            this.playnameTextBox.Location = new System.Drawing.Point(105, 175);
             this.playnameTextBox.Name = "playnameTextBox";
-            this.playnameTextBox.Size = new System.Drawing.Size(121, 20);
+            this.playnameTextBox.Size = new System.Drawing.Size(153, 20);
             this.playnameTextBox.TabIndex = 4;
             // 
             // addToListBtn
             // 
-            this.addToListBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.addToListBtn.Location = new System.Drawing.Point(143, 213);
+            this.addToListBtn.Depth = 0;
+            this.addToListBtn.Font = new System.Drawing.Font("Wingdings 3", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte) (2)));
+            this.addToListBtn.Icon = null;
+            this.addToListBtn.Location = new System.Drawing.Point(264, 175);
+            this.addToListBtn.MouseState = RSBot.Theme.IMatMouseState.HOVER;
             this.addToListBtn.Name = "addToListBtn";
-            this.addToListBtn.Size = new System.Drawing.Size(75, 23);
-            this.addToListBtn.TabIndex = 3;
-            this.addToListBtn.Text = "add";
+            this.addToListBtn.Primary = true;
+            this.addToListBtn.Raised = true;
+            this.addToListBtn.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.addToListBtn.SingleColor = System.Drawing.Color.LightSlateGray;
+            this.addToListBtn.Size = new System.Drawing.Size(57, 20);
+            this.addToListBtn.TabIndex = 1;
+            this.addToListBtn.Text = "a";
             this.addToListBtn.UseVisualStyleBackColor = true;
-            this.addToListBtn.UseWaitCursor = true;
             this.addToListBtn.Click += new System.EventHandler(this.addToListBtn_Click);
             // 
             // tracePlayerList
@@ -90,17 +94,6 @@ namespace FortressWar.Views
             this.columnName.Text = "Name";
             this.columnName.Width = 300;
             // 
-            // startTrace
-            // 
-            this.startTrace.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.startTrace.Location = new System.Drawing.Point(6, 242);
-            this.startTrace.Name = "startTrace";
-            this.startTrace.Size = new System.Drawing.Size(75, 23);
-            this.startTrace.TabIndex = 0;
-            this.startTrace.Text = "startTrace";
-            this.startTrace.UseVisualStyleBackColor = true;
-            this.startTrace.Click += new System.EventHandler(this.startTrace_Click);
-            // 
             // Main
             // 
             this.Controls.Add(this.panel1);
@@ -116,9 +109,7 @@ namespace FortressWar.Views
 
         private RSBot.Theme.Controls.ListView tracePlayerList;
 
-        private System.Windows.Forms.Button startTrace;
-
-        private System.Windows.Forms.Button addToListBtn;
+        private RSBot.Theme.Material.Button addToListBtn;
 
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.ColumnHeader columnName;
