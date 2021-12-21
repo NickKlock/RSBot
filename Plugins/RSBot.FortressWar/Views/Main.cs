@@ -88,7 +88,6 @@ namespace FortressWar.Views
             PlayerConfig.SetArray("RSBot.FortressWar.TargetLeaderList",list);
             PlayerConfig.Save();         
         }
-
         private void menuRemove_Remove(object sender, EventArgs e)
         {
             if (tracePlayerList.SelectedItems.Count ==1)
@@ -100,7 +99,6 @@ namespace FortressWar.Views
             }
             
         }
-
         private void menuRemoveTarget_Remove(object sender, EventArgs e)
         {
             if (targetLeaderList.SelectedItems.Count ==1)
@@ -124,11 +122,6 @@ namespace FortressWar.Views
                     continue;
                 }
 
-                if (player.IsBehindObstacle)
-                {
-                    continue;
-                }
-                
                 foreach (var playerActiveBuffs in player.State.ActiveBuffs)
                 {
                     var buffName = playerActiveBuffs.Record.GetRealName().ToLower();
