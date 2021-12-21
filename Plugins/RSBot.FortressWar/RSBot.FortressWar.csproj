@@ -32,6 +32,9 @@
         <WarningLevel>4</WarningLevel>
     </PropertyGroup>
     <ItemGroup>
+        <Reference Include="RSBot.Theme, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+          <HintPath>..\..\Build\RSBot.Theme.dll</HintPath>
+        </Reference>
         <Reference Include="System" />
         <Reference Include="System.Core" />
         <Reference Include="System.Data" />
@@ -41,10 +44,13 @@
     </ItemGroup>
     <ItemGroup>
         <Compile Include="Bootstrap.cs" />
+        <Compile Include="Bundle\CommandCore\CheckPower.cs" />
         <Compile Include="Bundle\CommandCore\CommandContainer.cs" />
         <Compile Include="Bundle\CommandCore\CommandHandler.cs" />
         <Compile Include="Bundle\CommandCore\CommandParser.cs" />
+        <Compile Include="Bundle\Commands\StructureCommand.cs" />
         <Compile Include="Bundle\Commands\ICommand.cs" />
+        <Compile Include="Bundle\Commands\MoveCommand.cs" />
         <Compile Include="Bundle\Commands\TraceCommand.cs" />
         <Compile Include="Bundle\Network\ChatCommand.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />

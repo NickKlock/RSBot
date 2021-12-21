@@ -2,11 +2,16 @@
 {
     public class CommandContainer
     {
-	    private string _raw;
-        private string _command;
-	    private string _arg;
-	    private string _invoke;
-	    private uint _senderId;
+	    //
+	    //Command container with all the info for the command 
+	    // getter and setters
+	    //
+	    
+	    private string _raw; // raw text
+        private string _command; // 2nd word
+	    private string _arg;// 3rd word
+	    private string _invoke;// current invoke cmd
+	    private uint _senderId;// sender Player UniqueID
         	
 	    public CommandContainer(string rw, string command, string arg, string invoke, uint senderId)
         	{

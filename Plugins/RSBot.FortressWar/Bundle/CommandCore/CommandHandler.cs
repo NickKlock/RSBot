@@ -2,8 +2,9 @@
 
 namespace RSBot.FortressWar.Bundle.CommandCore
 {
-    public class CommandHandler
+    public static class CommandHandler
     {
+        //handles the command gets called when the bot receives the package from the server
         public static void HandleCommand(CommandContainer commandContainer)
         {
             if (Views.View.Instance.Commands.ContainsKey(commandContainer.Command))

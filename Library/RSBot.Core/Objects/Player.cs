@@ -1106,7 +1106,9 @@ namespace RSBot.Core.Objects
             PacketManager.SendPacket(packet, PacketDestination.Server, callback);
             callback.AwaitResponse(500);
         }
-
+        /// <summary>
+        /// Start tracing by uniqueId
+        /// </summary>
         public void StartTrace(uint uniqueId)
         {
             var actionPacket = new Packet(0x7074);
@@ -1114,12 +1116,45 @@ namespace RSBot.Core.Objects
             actionPacket.WriteByte(3);
             actionPacket.WriteByte(1);
             actionPacket.WriteUInt(uniqueId);
-            //LocalPlayer.Get.Tracing = true;
             actionPacket.Lock();
 
             var callBack = new AwaitCallback(null, 0xB074);
             PacketManager.SendPacket(actionPacket,PacketDestination.Server,callBack);
             callBack.AwaitResponse(500);
+        }
+
+        /// <summary>
+        /// Fast moving to a certain postion, used in MoveCommand.cs
+        /// useful in big wars to move the entire guild to a certain char
+        /// needs to be faster then the usual move command so the checks are removed
+        /// </summary>
+        public void FastMove(Position destination)
+        {
+            if (HasActiveVehicle)
+            {
+                Vehicle.Move(destination);
+            }
+
+            var packet = new Packet(0x7021);
+            packet.WriteByte(1);
+            packet.WriteUShort(destination.RegionID);
+
+            if (!destination.IsInDungeon)
+            {
+                packet.WriteShort(destination.XOffset);
+                packet.WriteShort(destination.ZOffset);
+                packet.WriteShort(destination.YOffset);
+            }
+            else
+            {
+                packet.WriteInt(destination.XOffset);
+                packet.WriteInt(destination.ZOffset);
+                packet.WriteInt(destination.YOffset);
+            }
+
+            packet.Lock();
+            PacketManager.SendPacket(packet, PacketDestination.Server);
+            
         }
     }
 }
