@@ -54,13 +54,13 @@
       <option value="$PROJECT_DIR$/Plugins/RSBot.Party/Views/Main.Designer.cs" />
       <option value="$PROJECT_DIR$/Plugins/RSBot.FortressWar/Views/Main.Designer.cs" />
       <option value="$PROJECT_DIR$/Botbases/RSBot.Bot.Default/Bundle/Loop/LoopBundle.cs" />
-      <option value="$PROJECT_DIR$/Botbases/RSBot.Bot.Default/Bot/Botbase.cs" />
       <option value="$PROJECT_DIR$/Botbases/RSBot.Bot.Default/Bundle/Target/TargetBundle.cs" />
       <option value="$PROJECT_DIR$/Plugins/RSBot.FortressWar/Bundle/Network/TargetSupport.cs" />
       <option value="$PROJECT_DIR$/Library/RSBot.Core/Objects/Player.cs" />
       <option value="$PROJECT_DIR$/Plugins/RSBot.FortressWar/Bundle/Network/TargetSupportHandler.cs" />
       <option value="$PROJECT_DIR$/Plugins/RSBot.FortressWar/Bundle/Network/TargetSupportResponse.cs" />
       <option value="$PROJECT_DIR$/Plugins/RSBot.FortressWar/Views/Main.cs" />
+      <option value="$PROJECT_DIR$/Botbases/RSBot.Bot.Default/Bot/Botbase.cs" />
     </changedPaths>
   </component>
   <component name="ProjectId" id="22QS2Zbh8upDfj9LNoDsozCAzsv" />
@@ -160,5 +160,9 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
+  </component>
+  <component name="XPathView.XPathProjectComponent">
+    <history />
+    <find-history />
   </component>
 </project>

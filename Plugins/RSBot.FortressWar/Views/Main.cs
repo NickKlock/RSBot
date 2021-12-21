@@ -7,6 +7,7 @@ using RSBot.Core.Components;
 using RSBot.Core.Objects.Spawn;
 
 using RSBot.Core.Event;
+using RSBot.Core.Objects;
 using RSBot.FortressWar.Bundle.CommandCore;
 using RSBot.FortressWar.Bundle.Commands;
 
@@ -44,16 +45,17 @@ namespace FortressWar.Views
         private void SubscribeEvents()
         {
             EventManager.SubscribeEvent("OnEnterGame", OnEnterGame);
-            EventManager.SubscribeEvent("OnKillSelectedEnemy",OnKillSelectedEnemy);
+            EventManager.SubscribeEvent("OnKillSelectedEnemy",SelectNewTarget);
+            EventManager.SubscribeEvent("OnDespawnEntity",SelectNewTarget);
+            EventManager.SubscribeEvent("OnSpawnPlayer",SelectNewTarget);
         }
 
-        private void OnKillSelectedEnemy()
+        private void SelectNewTarget()
         {
-            SpawnManager.TryGetEntities<SpawnedPlayer>(out var spawnedPlayers);
-            foreach (var player in spawnedPlayers)
-            {
-                
-            }
+            if (Game.Player.State.LifeState == LifeState.Dead)
+                return;
+            
+            aiSelectingTarget();
         }
 
         private void OnEnterGame()
@@ -113,6 +115,11 @@ namespace FortressWar.Views
 
         private void button1_Click(object sender, EventArgs e)
         {
+            aiSelectingTarget();
+        }
+
+        private void aiSelectingTarget()
+        {
             SpawnManager.TryGetEntities<SpawnedPlayer>(out var spawnedPlayers);
             var players = spawnedPlayers.ToList();
             foreach (var player in players)
@@ -121,41 +128,30 @@ namespace FortressWar.Views
                 {
                     continue;
                 }
-
-                foreach (var playerActiveBuffs in player.State.ActiveBuffs)
+                // change again
+                var hasDefensiveBuff = player.State.ActiveBuffs.Where(info =>
+                    info.Record.GetRealName().Contains("skin")
+                    || info.Record.GetRealName().Contains("fence")
+                    || info.Record.GetRealName().Contains("pain")
+                    || info.Record.GetRealName().Contains("bless")
+                    || info.Record.GetRealName().Contains("snow shield")
+                    || info.Record.GetRealName().Contains("screen")
+                    || info.Record.GetRealName().Contains("bloody"));
+                
+                if (hasDefensiveBuff.Any())
                 {
-                    var buffName = playerActiveBuffs.Record.GetRealName().ToLower();
-                    if (buffName.Contains("skin")
-                        || buffName.Contains("screen")
-                        || buffName.Contains("skin")
-                        || buffName.Contains("fence")
-                        || buffName.Contains("pain")
-                        || buffName.Contains("bless")
-                        || buffName.Contains("snow shield")
-                        || buffName.Contains("bloody"))
-                    {
-                        Log.Notify("Found buff not selecting");
-                    }
-                    else
-                    {
-                        Log.Notify("No buff selecting");
-                        Game.Player.SelectEntity(player.UniqueId); 
-                        
-                        return;
-                    }
+                    continue;
                 }
-
+                Game.Player.SelectEntity(player.UniqueId);
+                Log.Notify("[AI-Targeting] selected "+player.Name + "[no buffs]");
                 if (player == players.Last())
                 {
-                    
-                    /* To Do
-                     * if the last player is selected do smth
-                     * */
-                     
+                    var attPlayer = players.Find(attackingPlayer => player.AttackingPlayer);
+                    Log.Notify("[AI-Targeting] selected "+player.Name + "[attacking player]");
+                    Game.Player.SelectEntity(attPlayer.UniqueId);
                 }
 
             }
-            
         }
     }
 }
