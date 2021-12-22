@@ -17,7 +17,7 @@ namespace FortressWar.Views
         //Command Dictionary for chat commands
         //
         public Dictionary<string, ICommand> Commands = new Dictionary<string, ICommand>();
-        private SpawnedPlayer _selectedPlayer;
+        private SpawnedPlayer _selectedPlayer = null;
         public Main()
         {            
             InitializeComponent();
@@ -44,42 +44,28 @@ namespace FortressWar.Views
         {
             EventManager.SubscribeEvent("OnEnterGame", OnEnterGame);
             EventManager.SubscribeEvent("OnKillSelectedEnemy",SelectNewTarget);
-            EventManager.SubscribeEvent("OnTick", GetTargetLeaderTarget);
+            EventManager.SubscribeEvent("OnTick", SelectNewTarget);
         }
-
-        private void GetTargetLeaderTarget()
-        {
-            if (!targetSupportCheckBox.Checked)
-                return;
-            
-            if (Game.Player.State.LifeState == LifeState.Dead)
-                return;
-
-            if (Kernel.Bot.Running)
-                return;        
-            
-            SpawnManager.TryGetEntities<SpawnedPlayer>(out var spawnedPlayers);
-            foreach (var spawnedPlayer in spawnedPlayers)
-            {
-                if (spawnedPlayer.Name.Equals(targetLeaderList.Items[0].Text))
-                {
-                    Game.Player.TargetSupport(spawnedPlayer.UniqueId);
-                }
-            }
-        }
+        
 
         private void SelectNewTarget()
         {
-            if (!aiTargetingCheckbox.Checked)
-                return;
-            
+
             if (Game.Player.State.LifeState == LifeState.Dead)
                 return;
 
             if (Kernel.Bot.Running)
                 return;
+            if (aiTargetingCheckbox.Checked && !targetSupportCheckBox.Checked)
+            {
+                AiSelectingTarget();
+                return;
+            }
             
-            AiSelectingTarget();
+            if (!aiTargetingCheckbox.Checked && targetSupportCheckBox.Checked)
+            {
+                TargetSupport();
+            }
         }
 
         private void OnEnterGame()
@@ -139,6 +125,23 @@ namespace FortressWar.Views
 
         private void AiSelectingTarget()
         {
+            if (_selectedPlayer != null)
+            {
+                if (_selectedPlayer.UniqueId == Game.Player.UniqueId)
+                {
+                    _selectedPlayer = null;
+                }
+                if (HasDefBuff(_selectedPlayer) || HasScreenOrskin(_selectedPlayer))
+                {
+                    _selectedPlayer = null;
+                }
+                else
+                {
+                    Game.Player.SelectEntity(_selectedPlayer.UniqueId);
+                    return;
+                }
+            }
+            
             SpawnManager.TryGetEntities<SpawnedPlayer>(out var spawnedPlayers);
             var players = spawnedPlayers.ToList();
             foreach (var player in players)
@@ -147,23 +150,13 @@ namespace FortressWar.Views
                 {
                     continue;
                 }
-                
-                var hasDefensiveBuff = player.State.ActiveBuffs.Where(info =>
-                    info.Record.GetRealName().ToLower().Contains("fence")
-                    || info.Record.GetRealName().ToLower().Contains("pain")
-                    || info.Record.GetRealName().ToLower().Contains("bless")
-                    || info.Record.GetRealName().ToLower().Contains("snow shield")
-                    || info.Record.GetRealName().ToLower().Contains("bloody"));
 
-                var hasScreenOrSkin = player.State.ActiveBuffs.Where(info =>
-                    info.Record.GetRealName().ToLower().Contains("screen") || 
-                    info.Record.GetRealName().ToLower().Contains("skin"));
-
-                if (hasDefensiveBuff.Any() || hasScreenOrSkin.Any())
+                if (HasDefBuff(player)|| HasScreenOrskin(player))
                 {
                     continue;
                 }
 
+                _selectedPlayer = player;
                 Game.Player.SelectEntity(player.UniqueId);
                 Log.Notify("[AI-Targeting] selected "+player.Name + "[no buffs]");
                 
@@ -177,12 +170,24 @@ namespace FortressWar.Views
                 
             }
         }
-        
+
+
+        private void TargetSupport()
+        {
+            SpawnManager.TryGetEntities<SpawnedPlayer>(out var spawnedPlayers);
+            foreach (var spawnedPlayer in spawnedPlayers)
+            {
+                if (spawnedPlayer.Name.Equals(targetLeaderList.Items[0].Text))
+                {
+                    Game.Player.TargetSupport(spawnedPlayer.UniqueId);
+                }
+            }
+        }
 
         private void aiTargetingCheckbox_CheckedChanged(object sender, EventArgs e)
         {
+            targetSupportCheckBox.Checked = !aiTargetingCheckbox.Checked;
             PlayerConfig.Set("RSBot.FortressWar.AiTargeting",aiTargetingCheckbox.Checked);
-            PlayerConfig.Save();
             
         }
 
@@ -195,9 +200,8 @@ namespace FortressWar.Views
 
         private void targetSupportCheckBox_CheckedChanged(object sender, EventArgs e)
         {
+            aiTargetingCheckbox.Checked = !targetSupportCheckBox.Checked;
             PlayerConfig.Set("RSBot.FortressWar.UseTargetSupport",targetSupportCheckBox.Checked);
-            PlayerConfig.Save();
-
         }
 
         private void LoadConfig()
@@ -215,6 +219,27 @@ namespace FortressWar.Views
                 targetLeaderList.Items.Add(str);
             }
 
+        }
+
+        private bool HasDefBuff(SpawnedPlayer player)
+        {
+            var hasDefensiveBuff = player.State.ActiveBuffs.Where(info =>
+                info.Record.GetRealName().ToLower().Contains("fence")
+                || info.Record.GetRealName().ToLower().Contains("pain")
+                || info.Record.GetRealName().ToLower().Contains("bless")
+                || info.Record.GetRealName().ToLower().Contains("snow shield")
+                || info.Record.GetRealName().ToLower().Contains("bloody"));
+
+            return hasDefensiveBuff.Any();
+        }
+        
+        private bool HasScreenOrskin(SpawnedPlayer player)
+        {
+            var hasScreenOrSkin = player.State.ActiveBuffs.Where(info =>
+                info.Record.GetRealName().ToLower().Contains("screen") || 
+                info.Record.GetRealName().ToLower().Contains("skin"));
+
+            return hasScreenOrSkin.Any();
         }
     }
 }
