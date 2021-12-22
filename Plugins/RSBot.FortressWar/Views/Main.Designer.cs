@@ -32,6 +32,11 @@ namespace FortressWar.Views
         private void InitializeComponent()
         {
             this.panel1 = new System.Windows.Forms.Panel();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.targetSupportCheckBox = new System.Windows.Forms.CheckBox();
+            this.chatCommandChatBox = new System.Windows.Forms.CheckBox();
+            this.aiTargetingCheckbox = new System.Windows.Forms.CheckBox();
+            this.button1 = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.targetLeaderTextBox = new System.Windows.Forms.TextBox();
             this.addToTargetListBtn = new RSBot.Theme.Material.Button();
@@ -46,8 +51,8 @@ namespace FortressWar.Views
             this.menuRemove = new System.Windows.Forms.MenuItem();
             this.addToListBtn = new RSBot.Theme.Material.Button();
             this.playnameTextBox = new System.Windows.Forms.TextBox();
-            this.button1 = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
+            this.groupBox3.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -55,6 +60,7 @@ namespace FortressWar.Views
             // panel1
             // 
             this.panel1.AutoSize = true;
+            this.panel1.Controls.Add(this.groupBox3);
             this.panel1.Controls.Add(this.button1);
             this.panel1.Controls.Add(this.groupBox2);
             this.panel1.Controls.Add(this.groupBox1);
@@ -64,21 +70,73 @@ namespace FortressWar.Views
             this.panel1.Size = new System.Drawing.Size(719, 459);
             this.panel1.TabIndex = 0;
             // 
+            // groupBox3
+            // 
+            this.groupBox3.Controls.Add(this.targetSupportCheckBox);
+            this.groupBox3.Controls.Add(this.chatCommandChatBox);
+            this.groupBox3.Controls.Add(this.aiTargetingCheckbox);
+            this.groupBox3.Location = new System.Drawing.Point(22, 27);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(236, 165);
+            this.groupBox3.TabIndex = 8;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "Settings";
+            // 
+            // targetSupportCheckBox
+            // 
+            this.targetSupportCheckBox.Location = new System.Drawing.Point(6, 79);
+            this.targetSupportCheckBox.Name = "targetSupportCheckBox";
+            this.targetSupportCheckBox.Size = new System.Drawing.Size(188, 24);
+            this.targetSupportCheckBox.TabIndex = 2;
+            this.targetSupportCheckBox.Text = "Target Support for Target Leader";
+            this.targetSupportCheckBox.UseVisualStyleBackColor = true;
+            this.targetSupportCheckBox.CheckedChanged += new System.EventHandler(this.targetSupportCheckBox_CheckedChanged);
+            // 
+            // chatCommandChatBox
+            // 
+            this.chatCommandChatBox.Location = new System.Drawing.Point(6, 49);
+            this.chatCommandChatBox.Name = "chatCommandChatBox";
+            this.chatCommandChatBox.Size = new System.Drawing.Size(188, 24);
+            this.chatCommandChatBox.TabIndex = 1;
+            this.chatCommandChatBox.Text = "Use Chat Commands";
+            this.chatCommandChatBox.UseVisualStyleBackColor = true;
+            this.chatCommandChatBox.CheckedChanged += new System.EventHandler(this.chatCommandChatBox_CheckedChanged);
+            // 
+            // aiTargetingCheckbox
+            // 
+            this.aiTargetingCheckbox.Location = new System.Drawing.Point(6, 19);
+            this.aiTargetingCheckbox.Name = "aiTargetingCheckbox";
+            this.aiTargetingCheckbox.Size = new System.Drawing.Size(119, 24);
+            this.aiTargetingCheckbox.TabIndex = 0;
+            this.aiTargetingCheckbox.Text = "Use Ai-Targeting";
+            this.aiTargetingCheckbox.UseVisualStyleBackColor = true;
+            this.aiTargetingCheckbox.CheckedChanged += new System.EventHandler(this.aiTargetingCheckbox_CheckedChanged);
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(313, 241);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 7;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.targetLeaderTextBox);
             this.groupBox2.Controls.Add(this.addToTargetListBtn);
             this.groupBox2.Controls.Add(this.targetLeaderList);
-            this.groupBox2.Location = new System.Drawing.Point(17, 275);
+            this.groupBox2.Location = new System.Drawing.Point(453, 270);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(249, 123);
+            this.groupBox2.Size = new System.Drawing.Size(249, 112);
             this.groupBox2.TabIndex = 6;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Target Leader";
             // 
             // targetLeaderTextBox
             // 
-            this.targetLeaderTextBox.Location = new System.Drawing.Point(9, 89);
+            this.targetLeaderTextBox.Location = new System.Drawing.Point(9, 79);
             this.targetLeaderTextBox.Name = "targetLeaderTextBox";
             this.targetLeaderTextBox.Size = new System.Drawing.Size(152, 20);
             this.targetLeaderTextBox.TabIndex = 7;
@@ -88,7 +146,7 @@ namespace FortressWar.Views
             this.addToTargetListBtn.Depth = 0;
             this.addToTargetListBtn.Font = new System.Drawing.Font("Wingdings 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte) (2)));
             this.addToTargetListBtn.Icon = null;
-            this.addToTargetListBtn.Location = new System.Drawing.Point(186, 89);
+            this.addToTargetListBtn.Location = new System.Drawing.Point(186, 79);
             this.addToTargetListBtn.MouseState = RSBot.Theme.IMatMouseState.HOVER;
             this.addToTargetListBtn.Name = "addToTargetListBtn";
             this.addToTargetListBtn.Primary = true;
@@ -132,7 +190,7 @@ namespace FortressWar.Views
             this.groupBox1.Controls.Add(this.tracePlayerList);
             this.groupBox1.Controls.Add(this.addToListBtn);
             this.groupBox1.Controls.Add(this.playnameTextBox);
-            this.groupBox1.Location = new System.Drawing.Point(17, 32);
+            this.groupBox1.Location = new System.Drawing.Point(453, 27);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(249, 200);
             this.groupBox1.TabIndex = 5;
@@ -192,16 +250,6 @@ namespace FortressWar.Views
             this.playnameTextBox.Size = new System.Drawing.Size(152, 20);
             this.playnameTextBox.TabIndex = 4;
             // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(429, 262);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 7;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
             // Main
             // 
             this.BackColor = System.Drawing.SystemColors.Control;
@@ -210,6 +258,7 @@ namespace FortressWar.Views
             this.Name = "Main";
             this.Size = new System.Drawing.Size(719, 459);
             this.panel1.ResumeLayout(false);
+            this.groupBox3.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.groupBox1.ResumeLayout(false);
@@ -217,6 +266,11 @@ namespace FortressWar.Views
             this.ResumeLayout(false);
             this.PerformLayout();
         }
+
+        private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.CheckBox aiTargetingCheckbox;
+        private System.Windows.Forms.CheckBox chatCommandChatBox;
+        private System.Windows.Forms.CheckBox targetSupportCheckBox;
 
         private System.Windows.Forms.Button button1;
 

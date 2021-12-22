@@ -5,7 +5,15 @@
     <projectFile>Application/RSBot.Replacer/RSBot.Replacer.csproj</projectFile>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e36f35fd-944d-41d6-addf-422d48ba9108" name="Default Changelist" comment="" />
+    <list default="true" id="e36f35fd-944d-41d6-addf-422d48ba9108" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.RSBot/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.RSBot/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Library/RSBot.Core/Objects/Player.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Library/RSBot.Core/Objects/Player.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/RSBot.FortressWar/Bundle/CommandCore/CommandHandler.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/RSBot.FortressWar/Bundle/CommandCore/CommandHandler.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/RSBot.FortressWar/Bundle/Commands/StructureCommand.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/RSBot.FortressWar/Bundle/Commands/StructureCommand.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/RSBot.FortressWar/Views/Main.Designer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/RSBot.FortressWar/Views/Main.Designer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/RSBot.FortressWar/Views/Main.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/RSBot.FortressWar/Views/Main.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugins/RSBot.General/Components/AutoLogin.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Plugins/RSBot.General/Components/AutoLogin.cs" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -40,27 +48,29 @@
       <option value="$PROJECT_DIR$/Plugins/RSBot.FortressWar/Bundle/CommandCore/Command.cs" />
       <option value="$PROJECT_DIR$/Plugins/RSBot.FortressWar/Bundle/Network/ChatCommand.cs" />
       <option value="$PROJECT_DIR$/Plugins/RSBot.FortressWar/Bundle/CommandCore/CommandContainer.cs" />
-      <option value="$PROJECT_DIR$/Plugins/RSBot.FortressWar/Bundle/CommandCore/CommandHandler.cs" />
       <option value="$PROJECT_DIR$/Plugins/RSBot.FortressWar/Bundle/CommandCore/CommandParser.cs" />
       <option value="$PROJECT_DIR$/Plugins/RSBot.FortressWar/Bundle/Commands/HeartCommand.cs" />
       <option value="$PROJECT_DIR$/Plugins/RSBot.FortressWar/Bundle/Commands/ICommand.cs" />
       <option value="$PROJECT_DIR$/Plugins/RSBot.FortressWar/Bundle/CommandCore/CheckPower.cs" />
       <option value="$PROJECT_DIR$/Plugins/RSBot.FortressWar/Bundle/Commands/MoveCommand.cs" />
-      <option value="$PROJECT_DIR$/Plugins/RSBot.FortressWar/Bundle/Commands/StructureCommand.cs" />
       <option value="$PROJECT_DIR$/Plugins/RSBot.FortressWar/Bundle/Commands/TraceCommand.cs" />
       <option value="$PROJECT_DIR$/Plugins/RSBot.Skills/Views/Main.cs" />
       <option value="$PROJECT_DIR$/Plugins/RSBot.Skills/Views/Main.Designer.cs" />
       <option value="$PROJECT_DIR$/Plugins/RSBot.Party/Views/Main.cs" />
       <option value="$PROJECT_DIR$/Plugins/RSBot.Party/Views/Main.Designer.cs" />
-      <option value="$PROJECT_DIR$/Plugins/RSBot.FortressWar/Views/Main.Designer.cs" />
       <option value="$PROJECT_DIR$/Botbases/RSBot.Bot.Default/Bundle/Loop/LoopBundle.cs" />
       <option value="$PROJECT_DIR$/Botbases/RSBot.Bot.Default/Bundle/Target/TargetBundle.cs" />
       <option value="$PROJECT_DIR$/Plugins/RSBot.FortressWar/Bundle/Network/TargetSupport.cs" />
-      <option value="$PROJECT_DIR$/Library/RSBot.Core/Objects/Player.cs" />
       <option value="$PROJECT_DIR$/Plugins/RSBot.FortressWar/Bundle/Network/TargetSupportHandler.cs" />
       <option value="$PROJECT_DIR$/Plugins/RSBot.FortressWar/Bundle/Network/TargetSupportResponse.cs" />
-      <option value="$PROJECT_DIR$/Plugins/RSBot.FortressWar/Views/Main.cs" />
       <option value="$PROJECT_DIR$/Botbases/RSBot.Bot.Default/Bot/Botbase.cs" />
+      <option value="$PROJECT_DIR$/Plugins/RSBot.General/Components/AutoLogin.cs" />
+      <option value="$PROJECT_DIR$/Library/RSBot.Core/Bot.cs" />
+      <option value="$PROJECT_DIR$/Plugins/RSBot.FortressWar/Views/Main.Designer.cs" />
+      <option value="$PROJECT_DIR$/Plugins/RSBot.FortressWar/Bundle/CommandCore/CommandHandler.cs" />
+      <option value="$PROJECT_DIR$/Library/RSBot.Core/Objects/Player.cs" />
+      <option value="$PROJECT_DIR$/Plugins/RSBot.FortressWar/Bundle/Commands/StructureCommand.cs" />
+      <option value="$PROJECT_DIR$/Plugins/RSBot.FortressWar/Views/Main.cs" />
     </changedPaths>
   </component>
   <component name="ProjectId" id="22QS2Zbh8upDfj9LNoDsozCAzsv" />
@@ -138,6 +148,7 @@
       <workItem from="1640011167431" duration="558000" />
       <workItem from="1640011769985" duration="25616000" />
       <workItem from="1640078404524" duration="17477000" />
+      <workItem from="1640163360094" duration="13165000" />
     </task>
     <servers />
   </component>

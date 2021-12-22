@@ -11,13 +11,12 @@ namespace RSBot.FortressWar.Bundle.Commands
         public void Action(string arg, uint senderId)
         {
             SpawnManager.TryGetEntities<SpawnedFortressStructure>(out var spawnedFortressStructures);
-            var hasPower = true; //player.Any();
             
             foreach (var spawnedFortressStructure in spawnedFortressStructures)
             {
                 if (spawnedFortressStructure.Record.GetRealName().ToLower().Contains("gate") ||
                     spawnedFortressStructure.Record.GetRealName().ToLower().Contains("heart") ||
-                    spawnedFortressStructure.Record.GetRealName().ToLower().Contains("tower") && hasPower/*CheckPower.BySenderId(senderId)*/)
+                    spawnedFortressStructure.Record.GetRealName().ToLower().Contains("tower") && CheckPower.BySenderId(senderId))
                 {
                     if (spawnedFortressStructure.Record.GetRealName().ToLower().Contains("heart"))
                     {

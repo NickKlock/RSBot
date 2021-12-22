@@ -1156,5 +1156,27 @@ namespace RSBot.Core.Objects
             PacketManager.SendPacket(packet, PacketDestination.Server);
             
         }
+
+        public bool TargetSupport(uint uniqueId)
+        {
+            var packet = new Packet(0x30C4);
+            packet.WriteUInt(uniqueId);
+            packet.Lock();
+
+            var awaitCallback = new AwaitCallback(response =>
+            {
+                var result = response.ReadByte() == 0x01;
+
+                //if (!result)
+                   // Log.Error("Could not select entity 0x" + (Game.ClientType < GameClientType.Vietnam ? response.ReadByte() : response.ReadUShort()));
+
+                return result
+                    ? AwaitCallbackResult.Received : AwaitCallbackResult.Failed;
+            }, 0xB045);
+            PacketManager.SendPacket(packet, PacketDestination.Server, awaitCallback);
+            awaitCallback.AwaitResponse();
+            
+            return awaitCallback.IsCompleted;
+        }
     }
 }

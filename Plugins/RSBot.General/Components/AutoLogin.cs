@@ -5,6 +5,7 @@ using RSBot.Core.Network.SecurityAPI;
 using RSBot.General.Models;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace RSBot.General.Components
@@ -92,7 +93,9 @@ namespace RSBot.General.Components
 
             if (account == null)
                 return;
-
+            
+            CheckForMaxiGuard();
+            
             ushort opcode = 0x6102;
             if (Game.ClientType >= GameClientType.Global)
                 opcode = 0x610A;
@@ -147,6 +150,18 @@ namespace RSBot.General.Components
             PacketManager.SendPacket(packet, PacketDestination.Server);
             PlayerConfig.Load("User\\" + character);
             EventManager.FireEvent("OnEnterGame");
+        }
+
+        private static void CheckForMaxiGuard()
+        {
+            foreach (var divisionInfoDivision in Game.ReferenceManager.DivisionInfo.Divisions)
+            {
+                var isMaxiGuar = divisionInfoDivision.GatewayServers.Where(gw => gw.Contains("maxiguard"));
+                if (isMaxiGuar.Any())
+                {
+                    Thread.Sleep(5000);
+                }
+            }
         }
     }
 }
