@@ -590,6 +590,7 @@ namespace RSBot.Core.Network
                     throw new PacketException(this, "Cannot Read from an unlocked Packet.");
 
                 var values = new byte[count];
+                _reader.BaseStream.Position = 0;
                 for (var x = 0; x < count; ++x)
                     values[x] = _reader.ReadByte();
 
