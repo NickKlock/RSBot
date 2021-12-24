@@ -77,7 +77,7 @@ namespace FortressWar.Views
             this.groupBox3.Controls.Add(this.aiTargetingCheckbox);
             this.groupBox3.Location = new System.Drawing.Point(22, 27);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(236, 165);
+            this.groupBox3.Size = new System.Drawing.Size(222, 165);
             this.groupBox3.TabIndex = 8;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Settings";
@@ -86,7 +86,7 @@ namespace FortressWar.Views
             // 
             this.targetSupportCheckBox.Location = new System.Drawing.Point(6, 79);
             this.targetSupportCheckBox.Name = "targetSupportCheckBox";
-            this.targetSupportCheckBox.Size = new System.Drawing.Size(188, 24);
+            this.targetSupportCheckBox.Size = new System.Drawing.Size(210, 24);
             this.targetSupportCheckBox.TabIndex = 2;
             this.targetSupportCheckBox.Text = "Target Support for Target Leader";
             this.targetSupportCheckBox.UseVisualStyleBackColor = true;

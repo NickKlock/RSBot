@@ -50,12 +50,12 @@ namespace FortressWar.Views
 
         private void SelectNewTarget()
         {
-
+            if (Kernel.Bot.Running)
+                return;
+            
             if (Game.Player.State.LifeState == LifeState.Dead)
                 return;
 
-            if (Kernel.Bot.Running)
-                return;
             if (aiTargetingCheckbox.Checked && !targetSupportCheckBox.Checked)
             {
                 AiSelectingTarget();
@@ -170,8 +170,7 @@ namespace FortressWar.Views
                 
             }
         }
-
-
+        
         private void TargetSupport()
         {
             SpawnManager.TryGetEntities<SpawnedPlayer>(out var spawnedPlayers);
@@ -186,9 +185,13 @@ namespace FortressWar.Views
 
         private void aiTargetingCheckbox_CheckedChanged(object sender, EventArgs e)
         {
-            targetSupportCheckBox.Checked = !aiTargetingCheckbox.Checked;
+            if (targetSupportCheckBox.Checked)
+            {
+                targetSupportCheckBox.Checked = !aiTargetingCheckbox.Checked;
+            }
             PlayerConfig.Set("RSBot.FortressWar.AiTargeting",aiTargetingCheckbox.Checked);
-            
+            PlayerConfig.Set("RSBot.FortressWar.UseTargetSupport",targetSupportCheckBox.Checked);
+
         }
 
         private void chatCommandChatBox_CheckedChanged(object sender, EventArgs e)
@@ -200,8 +203,13 @@ namespace FortressWar.Views
 
         private void targetSupportCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            aiTargetingCheckbox.Checked = !targetSupportCheckBox.Checked;
+            if (aiTargetingCheckbox.Checked)
+            {
+                aiTargetingCheckbox.Checked = !targetSupportCheckBox.Checked;
+            }
             PlayerConfig.Set("RSBot.FortressWar.UseTargetSupport",targetSupportCheckBox.Checked);
+            PlayerConfig.Set("RSBot.FortressWar.AiTargeting",aiTargetingCheckbox.Checked);
+
         }
 
         private void LoadConfig()
