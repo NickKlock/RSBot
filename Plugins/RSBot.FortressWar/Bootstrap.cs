@@ -21,7 +21,7 @@ namespace RSBot.FortressWar
         public void Initialize()
         {
             Views.View.Instance = new Main();
-            Core.Log.Notify("Plugin [Fortress War] initialized!");
+            Core.Log.Notify("Plugin [War] initialized!");
         }
 
         public Control GetView()
