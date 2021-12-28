@@ -17,7 +17,7 @@ namespace FortressWar.Views
         //Command Dictionary for chat commands
         //
         public Dictionary<string, ICommand> Commands = new Dictionary<string, ICommand>();
-        private SpawnedPlayer _selectedPlayer = null;
+        private SpawnedPlayer _selectedPlayer;
         public Main()
         {            
             InitializeComponent();
@@ -45,13 +45,30 @@ namespace FortressWar.Views
             EventManager.SubscribeEvent("OnEnterGame", OnEnterGame);
             EventManager.SubscribeEvent("OnKillSelectedEnemy",SelectNewTarget);
             EventManager.SubscribeEvent("OnTick", SelectNewTarget);
+            EventManager.SubscribeEvent("OnDespawnEntity", new Action<SpawnedEntity>(DeSpawnEntity));
+            EventManager.SubscribeEvent("OnSpawnPlayer",SelectNewTarget);
         }
-        
+
+
+
+        private void DeSpawnEntity(SpawnedEntity despawEntity)
+        {
+            if (aiTargetingCheckbox.Checked && !targetSupportCheckBox.Checked)
+            {
+                if (despawEntity.UniqueId == _selectedPlayer.UniqueId)
+                {
+                    Game.Player.DeselectEntity();
+                }
+            }
+            
+        }
+
 
         private void SelectNewTarget()
         {
             if (Kernel.Bot.Running)
                 return;
+            
             
             if (Game.Player.State.LifeState == LifeState.Dead)
                 return;
@@ -65,6 +82,7 @@ namespace FortressWar.Views
             if (!aiTargetingCheckbox.Checked && targetSupportCheckBox.Checked)
             {
                 TargetSupport();
+                
             }
         }
 
@@ -117,10 +135,11 @@ namespace FortressWar.Views
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if (Game.SelectedEntity == null)
-                return;
-            
-            Game.Player.TargetSupport(Game.SelectedEntity.UniqueId);
+            var stateActiveBuffs = Game.SelectedEntity.Entity.State.ActiveBuffs;
+            foreach (var stateActiveBuff in stateActiveBuffs)
+            {
+                Log.Notify(stateActiveBuff.Record.GetRealName());
+            }
         }
 
         private void AiSelectingTarget()
@@ -129,11 +148,34 @@ namespace FortressWar.Views
             {
                 if (_selectedPlayer.UniqueId == Game.Player.UniqueId)
                 {
-                    _selectedPlayer = null;
+                    Reset();
                 }
-                if (HasDefBuff(_selectedPlayer) || HasScreenOrskin(_selectedPlayer))
+                if (HasDefBuff(_selectedPlayer) || HasScreenOrskin(_selectedPlayer)) 
                 {
-                    _selectedPlayer = null;
+                    Reset();
+                }
+                if (_selectedPlayer.State.LifeState == LifeState.Dead)
+                {
+                    Reset();
+                } 
+                if (_selectedPlayer.Tracker.Position.DistanceTo(Game.Player.Tracker.Position) >= 40)
+                {
+                    Reset();
+                }
+
+                if (_selectedPlayer.State.BodyState == BodyState.Berzerk 
+                    || _selectedPlayer.State.BodyState == BodyState.Hwan 
+                    && radioZerkers.Checked)
+                {
+                    Game.Player.SelectEntity(_selectedPlayer.UniqueId);
+
+                }
+                
+                if (radioGuildlist.Checked && 
+                    listFriendlyGuilds.Items.Cast<ListViewItem>()
+                        .Select(item => item.Text).ToList().Contains(_selectedPlayer.Guild.Name))
+                {
+                    Reset();
                 }
                 else
                 {
@@ -141,34 +183,62 @@ namespace FortressWar.Views
                     return;
                 }
             }
+            List<SpawnedPlayer> noBuffPlayers = new List<SpawnedPlayer>();
             
             SpawnManager.TryGetEntities<SpawnedPlayer>(out var spawnedPlayers);
-            var players = spawnedPlayers.ToList();
-            foreach (var player in players)
+            foreach (var player in spawnedPlayers)
             {
-                if (player.Guild.IsFriendly)
-                {
+                /*if (player.Guild.IsFriendly)
+                {                
+                    Log.Notify("Is Friendly : "+player.Name);
                     continue;
-                }
-
-                if (HasDefBuff(player)|| HasScreenOrskin(player))
-                {
-                    continue;
-                }
-
-                _selectedPlayer = player;
-                Game.Player.SelectEntity(player.UniqueId);
-                Log.Notify("[AI-Targeting] selected "+player.Name + "[no buffs]");
-                
-                /*
-                if (player.State.BodyState == BodyState.Berzerk || player.State.BodyState == BodyState.Hwan && !hasScreenOrSkin.Any() )
-                {
-                    Game.Player.SelectEntity(player.UniqueId);
-                    Log.Notify("[AI-Targeting] selected "+player.Name + "[Zerking]"); 
                 }*/
 
+                if (radioGuildlist.Checked && listFriendlyGuilds.Items.Cast<ListViewItem>()
+                    .Select(item => item.Text).ToList().Contains(player.Guild.Name))
+                    continue;
+                
+
+                if (radioZerkers.Checked 
+                     && player.State.BodyState == BodyState.Berzerk 
+                     || player.State.BodyState == BodyState.Hwan)
+                 {
+                     Game.Player.SelectEntity(player.UniqueId);
+                     _selectedPlayer = player;
+                     Log.Notify("[AI-Targeting] selected "+player.Name + "[Zerking]");
+                     return;
+                 }
+                
+                
+                if (HasDefBuff(player)|| HasScreenOrskin(player))
+                    continue;
+                
+
+                switch (Game.Player.JobInformation.Type)
+                {
+                    case JobType.Hunter:
+                    case JobType.Trade:
+                        if (player.Job == JobType.Hunter || player.Job == JobType.Trade)
+                            continue;
+                        
+                        break;
+                    case JobType.Thief:
+                        if (player.Job == JobType.Thief)
+                            continue;
+                        
+                        break;
+                }
+                noBuffPlayers.Add(player);
+                
                 
             }
+
+            var orderedEnumerable = noBuffPlayers
+                .OrderBy(p => p.Tracker.Position.DistanceTo(Game.Player.Tracker.Position));
+
+            _selectedPlayer = orderedEnumerable.First();
+            Game.Player.SelectEntity(orderedEnumerable.First().UniqueId);
+            Log.Notify("[AI-Targeting] selected "+orderedEnumerable.First().Name + "[no buffs]");
         }
         
         private void TargetSupport()
@@ -188,6 +258,12 @@ namespace FortressWar.Views
             if (targetSupportCheckBox.Checked)
             {
                 targetSupportCheckBox.Checked = !aiTargetingCheckbox.Checked;
+            }
+
+            if (Game.SelectedEntity != null)
+            {
+                Game.Player.DeselectEntity();
+                _selectedPlayer = null;
             }
             PlayerConfig.Set("RSBot.FortressWar.AiTargeting",aiTargetingCheckbox.Checked);
             PlayerConfig.Set("RSBot.FortressWar.UseTargetSupport",targetSupportCheckBox.Checked);
@@ -217,6 +293,8 @@ namespace FortressWar.Views
             aiTargetingCheckbox.Checked = PlayerConfig.Get("RSBot.FortressWar.AiTargeting",true);
             chatCommandChatBox.Checked = PlayerConfig.Get<bool>("RSBot.FortressWar.UseChatCommands");
             targetSupportCheckBox.Checked = PlayerConfig.Get<bool>("RSBot.FortressWar.UseTargetSupport");
+            radioGuildlist.Checked = PlayerConfig.Get<bool>("RSBot.FortressWar.IgnoreFriendlyGuilds");
+            radioZerkers.Checked = PlayerConfig.Get<bool>("RSBot.FortressWar.TargetZerkersFirst");
             
             foreach (var str in  PlayerConfig.GetArray<string>("RSBot.FortressWar.commandList"))
             {
@@ -225,6 +303,10 @@ namespace FortressWar.Views
             foreach (var str in  PlayerConfig.GetArray<string>("RSBot.FortressWar.TargetLeaderList"))
             {
                 targetLeaderList.Items.Add(str);
+            }
+            foreach (var str in  PlayerConfig.GetArray<string>("RSBot.FortressWar.FriendlyGuilds"))
+            {
+                listFriendlyGuilds.Items.Add(str);
             }
 
         }
@@ -248,6 +330,36 @@ namespace FortressWar.Views
                 info.Record.GetRealName().ToLower().Contains("skin"));
 
             return hasScreenOrSkin.Any();
+        }
+
+        private void Reset()
+        {
+            if (Game.SelectedEntity != null)
+            {
+                Game.Player.DeselectEntity();
+            }
+            _selectedPlayer = null;
+        }
+
+        private void btnAddFriendlyGuild_Click(object sender, EventArgs e)
+        {
+            string row = txtFriendlyGuild.Text;
+            var listViewItem = new ListViewItem(row);
+            listFriendlyGuilds.Items.Add(listViewItem);
+            var list = listFriendlyGuilds.Items.Cast<ListViewItem>().Select(item => item.Text).ToArray();
+            PlayerConfig.SetArray("RSBot.FortressWar.FriendlyGuilds",list);
+            PlayerConfig.Save();   
+        }
+
+        private void radioZerkers_CheckedChanged(object sender, EventArgs e)
+        {
+            PlayerConfig.Set("RSBot.FortressWar.TargetZerkersFirst",radioZerkers.Checked);
+
+        }
+
+        private void radioGuildlist_CheckedChanged(object sender, EventArgs e)
+        {
+            PlayerConfig.Set("RSBot.FortressWar.IgnoreFriendlyGuilds",radioGuildlist.Checked);
         }
     }
 }

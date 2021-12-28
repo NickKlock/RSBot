@@ -11,11 +11,11 @@ namespace RSBot.FortressWar
         public PluginInfo Information => new PluginInfo
         {
             DisplayAsTab = true,
-            DisplayName = "Fortress War",
+            DisplayName = "War",
             InternalName = "RSBot.Fortress",
             LoadIndex = 2,
             TabDisplayIndex = 101,
-            RequireIngame = false
+            RequireIngame = true
         };
         
         public void Initialize()
