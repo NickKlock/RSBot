@@ -152,6 +152,19 @@ namespace nsDetours
 		return Real_bind(s, name, namelen);
 	}
 
+	extern "C" HANDLE(WINAPI * Real_CreateSemaphoreA)(LPSECURITY_ATTRIBUTES lpSemaphoreAttributes, LONG lInitialCount, LONG lMaximumCount, LPCSTR lpName) = CreateSemaphoreA;
+	HANDLE WINAPI User_CreateSemaphoreA(LPSECURITY_ATTRIBUTES lpSemaphoreAttributes, LONG lInitialCount, LONG lMaximumCount, LPCSTR lpName)
+	{
+		if (lpName && strcmp(lpName, "Global\\Silkroad Client") == 0)
+		{
+			char newName[128] = { 0 };
+			_snprintf_s(newName, sizeof(newName), sizeof(newName) / sizeof(newName[0]) - 1, "Client_%d", 0xFFFFFFFF & __rdtsc());
+			return Real_CreateSemaphoreA(lpSemaphoreAttributes, lInitialCount, lMaximumCount, newName);
+		}
+
+		return Real_CreateSemaphoreA(lpSemaphoreAttributes, lInitialCount, lMaximumCount, lpName);
+	}
+
 	extern "C" DWORD(WINAPI * Real_GetAdaptersInfo)(PIP_ADAPTER_INFO pAdapterInfo, PULONG pOutBufLen) = GetAdaptersInfo;
 	DWORD WINAPI User_GetAdaptersInfo(PIP_ADAPTER_INFO pAdapterInfo, PULONG pOutBufLen)
 	{
@@ -291,62 +304,61 @@ namespace nsPatch
 		DetourAttach(&(PVOID&)nsDetours::Real_CreateMutexA, nsDetours::User_CreateMutexA);
 		DetourAttach(&(PVOID&)nsDetours::Real_bind, nsDetours::User_bind);
 		DetourAttach(&(PVOID&)nsDetours::Real_GetAdaptersInfo, nsDetours::User_GetAdaptersInfo);
+		DetourAttach(&(PVOID&)nsDetours::Real_CreateSemaphoreA, nsDetours::User_CreateSemaphoreA);
 
 		//Redirect detour
 		DetourAttach(&(PVOID&)nsDetours::Real_connect, nsDetours::Detour_connect);
 
 		DetourTransactionCommit();
 
-		//Redirect gateway
+		using namespace nsDetours;
+
+		printf("Redirecting To: %s:%d\n", g_RedirectIP.c_str(), g_RedirectPort);
+
+		vector<string> tokens = TokenizeString(g_RedirectIP, "\r\n\t .");
+
+		for (size_t i = 0; i < routeListCount; ++i)
 		{
-			using namespace nsDetours;
-
-			cout << "Redirecting to: " << g_RedirectIP << ":" << g_RedirectPort << endl;
-
-			vector<string> tokens = TokenizeString(g_RedirectIP, "\r\n\t .");
-			for (size_t i = 0; i < routeListCount; i++)
-			{
-				routeArray[i].dstA = atoi(tokens[0].c_str());
-				routeArray[i].dstB = atoi(tokens[1].c_str());
-				routeArray[i].dstC = atoi(tokens[2].c_str());
-				routeArray[i].dstD = atoi(tokens[3].c_str());
-				routeArray[i].dstPort = g_RedirectPort;
-			}
-
-			WSADATA wsaData = { 0 };
-			WSAStartup(MAKEWORD(2, 2), &wsaData);
-			routeListCount = 0;
-			for (size_t i = 0; i < g_RealGatewayAddresses.size(); i++)
-			{
-				string nme = g_RealGatewayAddresses[i];
-				printf("g_RealGatewayAddresses[%d]: %s\n", i, nme.c_str());
-				struct hostent* remoteHost = gethostbyname(nme.c_str());
-				if (remoteHost)
-				{
-					struct in_addr addr;
-					addr.s_addr = *(u_long*)remoteHost->h_addr_list[0];
-					std::string hostip = inet_ntoa(addr);
-					printf("\tIP: %s:%d\n", hostip.c_str(), g_RealGatewayPort);
-					tokens = TokenizeString(hostip, ".");
-					routeArray[routeListCount].srcA = atoi(tokens[0].c_str());
-					routeArray[routeListCount].srcB = atoi(tokens[1].c_str());
-					routeArray[routeListCount].srcC = atoi(tokens[2].c_str());
-					routeArray[routeListCount].srcD = atoi(tokens[3].c_str());
-					routeArray[routeListCount].srcPort = g_RealGatewayPort;
-					routeListCount++;
-					if (routeListCount > 16)
-					{
-						MessageBoxA(0, "There are too many host addresses to track. The application will now exit.", "Fatal Error", MB_ICONERROR);
-						ExitProcess(0);
-					}
-				}
-				else
-				{
-					printf("Lookup Failed for: %s\n", nme.c_str());
-				}
-			}
-			WSACleanup();
+			routeArray[i].dstA = atoi(tokens[0].c_str());
+			routeArray[i].dstB = atoi(tokens[1].c_str());
+			routeArray[i].dstC = atoi(tokens[2].c_str());
+			routeArray[i].dstD = atoi(tokens[3].c_str());
+			routeArray[i].dstPort = g_RedirectPort;
 		}
+
+		WSADATA wsaData = { 0 };
+		WSAStartup(MAKEWORD(2, 2), &wsaData);
+		routeListCount = 0;
+		for (size_t i = 0; i < g_RealGatewayAddresses.size(); ++i)
+		{
+			string nme = g_RealGatewayAddresses[i];
+			printf("g_RealGatewayAddresses[%d]: %s\n", i, nme.c_str());
+			struct hostent* remoteHost = gethostbyname(nme.c_str());
+			if (remoteHost)
+			{
+				struct in_addr addr;
+				addr.s_addr = *(u_long*)remoteHost->h_addr_list[0];
+				std::string hostip = inet_ntoa(addr);
+				printf("\tIP: %s:%d\n", hostip.c_str(), g_RealGatewayPort);
+				tokens = TokenizeString(hostip, ".");
+				routeArray[routeListCount].srcA = atoi(tokens[0].c_str());
+				routeArray[routeListCount].srcB = atoi(tokens[1].c_str());
+				routeArray[routeListCount].srcC = atoi(tokens[2].c_str());
+				routeArray[routeListCount].srcD = atoi(tokens[3].c_str());
+				routeArray[routeListCount].srcPort = g_RealGatewayPort;
+				routeListCount++;
+				if (routeListCount > 16)
+				{
+					MessageBoxA(0, "There are too many host addresses to track. The application will now exit.", "Fatal Error", MB_ICONERROR);
+					ExitProcess(0);
+				}
+			}
+			else
+			{
+				printf("Lookup Failed for: %s\n", nme.c_str());
+			}
+		}
+		WSACleanup();
 	}
 
 	void Uninstall()
@@ -361,6 +373,7 @@ namespace nsPatch
 		DetourDetach(&(PVOID&)nsDetours::Real_CreateMutexA, nsDetours::User_CreateMutexA);
 		DetourDetach(&(PVOID&)nsDetours::Real_bind, nsDetours::User_bind);
 		DetourDetach(&(PVOID&)nsDetours::Real_GetAdaptersInfo, nsDetours::User_GetAdaptersInfo);
+		DetourDetach(&(PVOID&)nsDetours::Real_CreateSemaphoreA, nsDetours::User_CreateSemaphoreA);
 
 		DetourTransactionCommit();
 
